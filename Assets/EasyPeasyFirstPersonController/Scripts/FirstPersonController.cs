@@ -89,7 +89,7 @@ namespace EasyPeasyFirstPersonController
         public float waterDrag = 2f;
         public LayerMask waterMask;
         [HideInInspector] public bool isInWater;
-        [HideInInspector] public float currentLedgeCooldown;
+        [HideInInspector] public float currentLedgeCooldown = 9999f;
 
         [Header("Visual Preferences")]
         public bool useFovKick = true;
