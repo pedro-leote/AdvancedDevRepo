@@ -18,7 +18,7 @@ public class RobotFreeAnim : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		CheckKey();
+		//CheckKey();
 		gameObject.transform.eulerAngles = rot;
 	}
 

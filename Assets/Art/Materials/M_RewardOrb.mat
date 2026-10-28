@@ -55,11 +55,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _OutlineThickness: -0.33
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _Color_1: {r: 1, g: 0.95213014, b: 0.78773576, a: 1}
     - _Color_2: {r: 0.99215686, g: 0.8237973, b: 0.5372549, a: 1}
+    - _Fresnel_Color: {r: 0.5309839, g: 1, b: 0.24056602, a: 1}
     - _Tex_Tiling: {r: 3, g: 3, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
