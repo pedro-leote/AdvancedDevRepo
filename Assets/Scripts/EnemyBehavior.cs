@@ -26,6 +26,7 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float _playerDetectedMaxTimer = 2f;
     private float _playerDetectedTimer;
     public bool IsPlayerDetected { get; private set; }
+    private Transform[] _stencilledTransforms;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -99,7 +100,6 @@ public class EnemyBehavior : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("Entered WalkingState");
         _navMeshComponent.isStopped = false;
         _enemyAnimator.anim.SetBool("Walk_Anim", true);
         if (!_navMeshComponent.SetDestination(_currentPatrolObjectiveWorldPosition))
@@ -127,8 +127,45 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         _navMeshComponent.isStopped = true;
-        Debug.Log("Stopped WalkingState");
+       
         StartCoroutine(WaitingState());
+    }
+
+    public void GetHitByStencilGrenade(float duration)
+    {
+        CancelInvoke(nameof(ResetLayer));
+        if (_stencilledTransforms == null)
+        {
+            _stencilledTransforms = GetComponentsInChildren<Transform>(true);
+        }
+
+        foreach (Transform item in _stencilledTransforms)
+        {
+            if (item != null)
+            {
+                item.gameObject.layer = LayerMask.NameToLayer("EnemyStencil");
+            }
+        }
+
+        Invoke(nameof(ResetLayer), duration);
+    }
+
+    private void ResetLayer()
+    {
+        if (_stencilledTransforms == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _stencilledTransforms.Length; i++)
+        {
+            if (_stencilledTransforms[i] != null)
+            {
+                _stencilledTransforms[i].gameObject.layer = LayerMask.NameToLayer("Enemy");
+            }
+        }
+
+        _stencilledTransforms = null;
     }
 
     private void RunCheckForPlayerInRadius()
@@ -147,7 +184,6 @@ public class EnemyBehavior : MonoBehaviour
 
         if (isInRadius && isInViewAngle)
         {
-            Debug.Log("Player is being seen.");
             _playerDetectedTimer += Time.deltaTime;
             if (!IsPlayerDetected && (_playerDetectedMaxTimer <= 0f || _playerDetectedTimer >= _playerDetectedMaxTimer))
             {
