@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -12,7 +13,8 @@ public class GrenadeThrowing : MonoBehaviour
     [SerializeField] private GameObject _grenadePrefab;
     [SerializeField] private Transform _throwingPoint;
     [SerializeField] private float _throwForce = 10f;
-    [SerializeField] private float _throwCooldown = 3.5f;
+    [SerializeField] private float _throwCooldown = 5f;
+    private bool _canThrow = true;
 
     private float _timeStepForPrediction = 0.1f;
     private LineRenderer _lineRenderer;
@@ -46,6 +48,8 @@ public class GrenadeThrowing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (!_hasActivatedPreview)
         {
             return;
@@ -86,10 +90,21 @@ public class GrenadeThrowing : MonoBehaviour
 
     public void ThrowGrenade(CallbackContext context)
     {
-        //TEMP
+        if (!_canThrow)
+        {
+            return;
+        }
         GameObject grenade = Instantiate(_grenadePrefab, _throwingPoint.position, Quaternion.identity);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(_throwingPoint.forward * _throwForce, ForceMode.Impulse);
+
+        _canThrow = false;
+        Invoke(nameof(ResetThrow), _throwCooldown);
+    }
+
+    private void ResetThrow()
+    {
+        _canThrow = true;
     }
 
     private void StartPredictTrajectory(CallbackContext context)

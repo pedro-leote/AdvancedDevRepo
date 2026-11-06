@@ -1,9 +1,18 @@
 namespace EasyPeasyFirstPersonController
 {
+    using System.Collections;
     using UnityEngine;
+    using UnityEngine.Rendering;
 
     public partial class FirstPersonController : MonoBehaviour
     {
+        private bool _canMove = true;
+        public bool CanMove => _canMove;
+
+        [Header("Debuff References")]
+        private DebuffVolumeHandler _debuffVolume;
+        [SerializeField] private float _debuffDuration = 5f;
+
         [Header("Settings")]
         public float walkSpeed = 3f;
         public float sprintSpeed = 5f;
@@ -124,6 +133,11 @@ namespace EasyPeasyFirstPersonController
 
             currentState = states.Grounded();
             currentState.EnterState();
+        }
+
+        void Start()
+        {
+            _debuffVolume = FindAnyObjectByType<DebuffVolumeHandler>();
         }
 
         private void Update()
@@ -270,5 +284,19 @@ namespace EasyPeasyFirstPersonController
             }
         }
 
+        public void DisableMovement()
+        {
+            _canMove = false;
+            _debuffVolume.ActivateDebuffVisuals();
+
+            //REMINDER: This float controls player debuff duration
+            Invoke(nameof(EnableMovement), _debuffDuration);
+        }
+
+        public void EnableMovement()
+        {
+            _canMove = true;
+            _debuffVolume.DeactivateDebuffVisuals();
+        }
     }
 }

@@ -51,6 +51,12 @@ namespace EasyPeasyFirstPersonController
             Vector2 input = ctx.input.moveInput;
             Vector3 targetMove = ctx.transform.right * input.x + ctx.transform.forward * input.y;
             
+            //Let's try it here
+            if(!ctx.CanMove)
+            {
+                return;
+            }
+
             // Normalize diagonal movement so they don't walk 40% faster diagonally
             targetMove = Vector3.ClampMagnitude(targetMove, 1f); 
 
